@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" sizes="25x25" href="data/stork.png">
+
+  <title>Map of Stork</title>
+  
+  <link rel="stylesheet" href="js/leaflet-0.7.3/leaflet.css" /> 
+  
+  <link rel="stylesheet" href="js/bootstrap-3.1.1/css/bootstrap.css" />  
+  
+  <link rel="stylesheet" href="js/font-awesome-4.1.0/css/font-awesome.css" /> 
+  
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style> 
+  
+  
+  
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="js/leaflet-0.7.3/leaflet.js"></script>
+  
+  <script type="text/javascript" src="js/leaflet-layerjson.js"></script>
+
+  <script type="text/javascript" src="js/leaflet-hash/leaflet-hash.js"></script> 
+  
+  <script type="text/javascript" src="js/leaflet.easybutton/easy-button.js"></script>
+
+  <script type="text/javascript" src="js/bootstrap-3.1.1/js/bootstrap.js"></script>
+  
+<!--
+  <script type="text/javascript" src="http://j.maxmind.com/app/geoip.js"></script>  
+-->
+  
+</head>
+
+
+<body>
+
+  <div id="map"></div>
+  
+
+
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <center><h4 class="modal-title">Welcome to the Map of Stork!</h4></center>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs" id="aboutTabs">
+              <li class="active"><a href="#about" data-toggle="tab"><i class="fa fa-question-circle"></i>&nbsp;About the project</a></li>
+              <li><a href="#contact" data-toggle="tab"><i class="fa fa-envelope"></i>&nbsp;Contact us</a></li>
+            </ul>
+            <div class="tab-content" id="aboutTabsContent" style="padding-top: 10px;">
+              <div class="tab-pane fade active in" id="about">
+                <p>More info <a href="http://wiki.openstreetmap.org/wiki/Uk:%D0%9B%D0%B5%D0%BB%D0%B5%D0%BA%D0%B8_2014">Лелеки 2014</a></p>
+              </div>
+              <div class="tab-pane fade" id="contact">
+				<p><a href="http://wiki.openstreetmap.org/wiki/Uk:%D0%9B%D0%B5%D0%BB%D0%B5%D0%BA%D0%B8_2014">Лелеки 2014</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+  <script>
+  
+
+	var attr_osm = '&copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
+    attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
+
+	var map = new L.Map('map', {
+			//}).setView([geoip_latitude(),  geoip_longitude()], 10);	
+			}).setView([48.6, 32.2], 7);	
+			
+	var hash = new L.Hash(map);	
+	L.control.scale().addTo(map);
+
+	L.easyButton('fa-info-circle', 
+				  function (){ $('#aboutModal').modal('show'); },
+				 ''
+				);
+
+				
+	var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		//attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		attribution: [attr_osm, attr_overpass].join(', ')
+	});
+    map.addLayer(osm);
+
+
+	L.layerJSON({
+		url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[birds_nest=stork];out+meta;',
+		propertyItems: 'elements',
+		propertyTitle: 'tags.name',
+		propertyLoc: ['lat','lon'],
+		buildIcon: function(data, title) {
+			return new L.icon({
+					iconUrl: "data/stork.png",
+					iconSize: [25, 25],
+					iconAnchor: [12, 12],
+					popupAnchor: new L.Point(0, -12)
+				  });
+		},
+		buildPopup: function(data, marker) {
+			
+			var link = '<a href="http://www.openstreetmap.org/edit?editor=id&node=' + data.id + '">Edit this entry in iD</a><br>';
+			var user = '<b>Added by: </b>' + '<a href="http://www.openstreetmap.org/user/' + data.user + '">' + data.user + '</a><br>';
+			var timestamp = '<b>Timestamp: </b>' + data.timestamp;
+
+			
+			var r = $('<table>');
+			
+			for (i in data.tags)
+			r.append($('<tr>').append($('<th>').text(i)).append($('<td>').text(data.tags[i])));
+			
+			var tags = $('<div>').append(r).html();
+
+			
+			var img = '<b>Foto: </b>' + '<a href="' + data.tags.image + '">' + "foto link" + '</a><br>';
+			if (data.tags.image == null) img = '';
+		
+			
+			return link + '<br>' + user + timestamp + '<br>' + '<br>' + '<b>Tags:</b>' + '<br>' + tags + '<br>' + img;
+		}
+	}).addTo(map);
+
+			
+  </script>
+</body>
+</html>
+
