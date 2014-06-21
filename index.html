@@ -106,7 +106,8 @@
 
 
 	L.layerJSON({
-		url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[birds_nest=stork];out+meta;',
+		//url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[birds_nest=stork];out+meta;',
+		url: 'http://overpass-api.de/api/interpreter?data=[out:json];area["boundary"="administrative"]["name:uk"="Україна"]->.a;node(area.a)[birds_nest=stork];out+meta;',
 		propertyItems: 'elements',
 		propertyTitle: 'tags.name',
 		propertyLoc: ['lat','lon'],
