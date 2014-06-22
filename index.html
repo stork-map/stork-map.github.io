@@ -40,10 +40,9 @@
   <script type="text/javascript" src="js/leaflet.easybutton/easy-button.js"></script>
 
   <script type="text/javascript" src="js/bootstrap-3.1.1/js/bootstrap.js"></script>
-  
-<!--
-  <script type="text/javascript" src="http://j.maxmind.com/app/geoip.js"></script>  
--->
+
+  <script type="text/javascript" src="js/leaflet.panoramio/panoramio.js"></script>
+
   
 </head>
 
@@ -86,27 +85,15 @@
 	var attr_osm = '&copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
     attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
 
-	var map = new L.Map('map', {
-			//}).setView([geoip_latitude(),  geoip_longitude()], 10);	
-			}).setView([48.6, 32.2], 7);	
-			
-	var hash = new L.Hash(map);	
-	L.control.scale().addTo(map);
 
-	L.easyButton('fa-info-circle', 
-				  function (){ $('#aboutModal').modal('show'); },
-				 ''
-				);
 
 				
 	var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 		//attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 		attribution: [attr_osm, attr_overpass].join(', ')
 	});
-    map.addLayer(osm);
 
-
-	L.layerJSON({
+	var stork = L.layerJSON({
 		//url: 'http://overpass-api.de/api/interpreter?data=[out:json];node({lat1},{lon1},{lat2},{lon2})[birds_nest=stork];out+meta;',
 		url: 'http://overpass-api.de/api/interpreter?data=[out:json];area["boundary"="administrative"]["name:uk"="Україна"]->.a;node(area.a)[birds_nest=stork];out+meta;',
 		propertyItems: 'elements',
@@ -141,7 +128,37 @@
 			
 			return link + '<br>' + user + timestamp + '<br>' + '<br>' + '<b>Tags:</b>' + '<br>' + tags + '<br>' + img;
 		}
+	});
+
+	var panoramio = new L.Panoramio({maxLoad: 50, maxTotal: 250});	
+	
+
+	var map = new L.Map('map', {
+			layers: [osm, stork],	
+			}).setView([48.6, 32.2], 7);
+			
+	var hash = new L.Hash(map);	
+	L.control.scale().addTo(map);
+
+	L.easyButton('fa-info-circle', 
+				  function (){ $('#aboutModal').modal('show'); },
+				 ''
+				);
+
+	
+	var baseLayer = {
+	  "OpenStreetMap": osm
+	};
+
+	var overlayLayer = {
+		"<img src='data/stork.png' width='20' height='20'>&nbsp;Лелеки": stork,
+		"<img src='data/panoramio-marker.png' width='17' height='17'>&nbsp;Фото Panoramio": panoramio
+	};
+
+	var layerControl = L.control.layers( null, overlayLayer, {
+	  collapsed: false
 	}).addTo(map);
+
 
 			
   </script>
