@@ -27,8 +27,6 @@
     }
   </style> 
   
-  
-  
   <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 
   <script type="text/javascript" src="js/leaflet-0.7.3/leaflet.js"></script>
@@ -42,7 +40,8 @@
   <script type="text/javascript" src="js/bootstrap-3.1.1/js/bootstrap.js"></script>
 
   <script type="text/javascript" src="js/leaflet.panoramio/panoramio.js"></script>
-
+  <script type="text/javascript" src="js/leaflet.flickr/flickr.js"></script>
+  
   
 </head>
 
@@ -130,9 +129,11 @@
 		}
 	});
 
-	var panoramio = new L.Panoramio({maxLoad: 50, maxTotal: 250});	
+	var panoramio = new L.Panoramio({maxLoad: 50, maxTotal: 250});
 	
-
+    var api_key='dfa25833234018ef8f19fb04c6935b77';	
+    var flickr = new L.Flickr(api_key,{maxLoad: 50, maxTotal: 250}); 
+	
 	var map = new L.Map('map', {
 			layers: [osm, stork],	
 			}).setView([48.6, 32.2], 7);
@@ -152,7 +153,8 @@
 
 	var overlayLayer = {
 		"<img src='data/stork.png' width='20' height='20'>&nbsp;Лелеки": stork,
-		"<img src='data/panoramio-marker.png' width='17' height='17'>&nbsp;Фото Panoramio": panoramio
+		"<img src='data/panoramio-marker.png' width='17' height='17'>&nbsp;Фото Panoramio": panoramio,
+		"<img src='data/flickr-marker.png' width='17' height='17'>&nbsp;Фото Flickr": flickr
 	};
 
 	var layerControl = L.control.layers( null, overlayLayer, {
