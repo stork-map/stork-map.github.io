@@ -1,7 +1,7 @@
 L.Control.EasyButtons = L.Control.extend({
     options: {
         position: 'topleft',
-        title: 'About',
+        title: '',
         intentedIcon: 'fa-circle-o'
     },
 
@@ -33,14 +33,14 @@ L.easyButton = function( btnIcon , btnFunction , btnTitle , btnMap ) {
   
   if ( typeof btnFunction === 'function'){
     newControl.intendedFunction = btnFunction;
-  } 
+  }
   
   if (btnTitle) newControl.options.title = btnTitle;
   
   if ( btnMap ){
     newControl.addTo(btnMap);
   } else {
-    newControl.addTo(map);
+//    newControl.addTo(map);
   }
   return newControl;
 };
