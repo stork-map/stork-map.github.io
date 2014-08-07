@@ -1,0 +1,61 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" sizes="25x25" href="data/stork.png">
+  
+  <title>Статистика</title> 
+  
+  <link rel="stylesheet" href="js/bootstrap-3.2.0/css/bootstrap.css" /> 
+  
+  <style>
+ 
+	a {
+		color: black;
+		text-decoration: none;
+	}
+ 
+  </style>  
+  
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>  
+  <script type="text/javascript" src="js/bootstrap-3.2.0/js/bootstrap.js"></script>
+	
+</head>
+
+<body>
+
+<script>
+
+	var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open('GET', 'https://overpass-api.de/api/interpreter?data=[maxsize%3A1073741824][out%3Ajson][timeout%3A900]%3Barea[%22boundary%22%3D%22administrative%22][%22name%3Auk%22%3D%22%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%22]-%3E.a%3Bnode%28area.a%29[%22birds_nest%22%3D%22stork%22]%3Bout%20meta%3B', false);
+		xmlhttp.send(null);
+		var nests = eval('(' + xmlhttp.responseText + ')');
+
+		var users = {};
+		for(var i=0; i < nests.elements.length; i++)
+			{
+				var el = nests.elements[i];
+				if (typeof users[el.user] == "undefined")
+					users[el.user] = 0;
+					users[el.user] = users[el.user] + 1;
+			}	
+
+	document.write('<div class="container"><div class="row clearfix"><div class="col-md-12 column"><br/><h3 class="text-center text-success"><b>Конкурс з обліку гнізд білого лелеки в Україні</b></h3><br/><table class="table table-bordered table-hover">');
+	document.write('<tr><th>Учасник</th><th>Кількість гнізд</td></tr>');
+	
+	for(var user in users)
+	{
+		document.write('<tr><td><a href="http://osm.org/user/' + user + '">' + user + '</a></td><td><a href="' + 
+		'http://overpass-turbo.eu/?Q=[maxsize%3A1073741824]%0A[out%3Ajson]%0A[timeout%3A900]%0A%3B%0Aarea%0A%20%20[%22boundary%22%3D%22administrative%22]%0A%20%20[%22name%3Auk%22%3D%22%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%22]%0A-%3E.a%3B%0Anode%0A%20%20%28area.a%29%0A%20%20%28user%3A%22' + user + '%22%29%0A%20%20[%22birds_nest%22%3D%22stork%22]%3B%0Aout%20body%3B%0A&C=49.71738;33.68408;6&R' +
+		'">' + users[user] + '</td></tr>');
+	}
+	
+	document.write('<tr><td><b>TOTAL</b></td><td><a href="http://overpass-turbo.eu/?Q=[maxsize%3A1073741824]%0A[out%3Ajson]%0A[timeout%3A900]%0A%3B%0Aarea%0A%20%20[%22boundary%22%3D%22administrative%22]%0A%20%20[%22name%3Auk%22%3D%22%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%22]%0A-%3E.a%3B%0Anode%0A%20%20%28area.a%29%0A%20%20[%22birds_nest%22%3D%22stork%22]%3B%0Aout%20meta%3B&C=49.71738;33.68408;6&R"><b>' + nests.elements.length + '<b/></a></td></tr>');
+	document.write('</table></div></div></div>');
+
+</script>
+	
+</body>
+</html>
