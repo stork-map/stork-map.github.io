@@ -135,12 +135,12 @@
 
 		var hash = new L.Hash(map);	
 		L.control.scale().addTo(map);
-/*					
+					
 		var baseLayer = {
 		  "MapBox Tiles": layerMapBox,
 		  "OpenStreetMap": layerOSM
 		};
-*/		
+		
 		var overlayLayer = {
 			"<img src='data/stork.png' width='20' height='20'>&nbsp;Лелеки": storkmap.markerClusterGroup,
 			"<img src='data/panoramio-marker.png' width='17' height='17'>&nbsp;Фото Panoramio": panoramio,
@@ -148,7 +148,7 @@
 			
 		};
 		
-		var layerControl = L.control.layers( null, overlayLayer, {
+		var layerControl = L.control.layers( baseLayer, overlayLayer, {
 		  collapsed: false
 		}).addTo(map);
 
@@ -177,12 +177,11 @@
 		var attr_nests = 'stork nests via <a href="http://www.overpass-api.de/">Overpass API</a>';
 		var attr_dev = 'web map created by <a href="http://www.openstreetmap.org/user/HasT">HasT</a>';	
 
-/*		
-		var layerMapBox = L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-			attribution: [attr_mapbox, attr_nests, attr_dev].join(', '),
-			id: 'examples.map-20v6611k'
+		
+		var layerMapBox = L.tileLayer('http://{s}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q', {
+			attribution: [attr_mapbox, attr_nests, attr_dev].join(', ')
 		});	
-*/
+
 		
 		var layerOSM = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: [attr_osm, attr_nests, attr_dev].join(', ')
@@ -194,7 +193,7 @@
 		var flickr = new L.Flickr(api_key,{maxLoad: 50, maxTotal: 250}); 		
 		
 
-		storkmap.map = L.map('map', {layers: [layerOSM], minZoom: 6});
+		storkmap.map = L.map('map', {layers: [layerMapBox], minZoom: 6});
 		storkmap.currentTag = "birds_nest";
 		storkmap.markerClusterGroup = L.markerClusterGroup();
 		storkmap.osmJson = {};
