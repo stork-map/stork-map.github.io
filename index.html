@@ -126,7 +126,6 @@
     function makeMap() {
 
         var map = storkmap.map;
-        map.setView(storkmap.currentPosition, 16);
         //map.on('viewreset', onMapViewReset);
         //map.on('moveend', onMapMoveEnd);
 		
@@ -136,11 +135,12 @@
 
 		var hash = new L.Hash(map);	
 		L.control.scale().addTo(map);
-					
+/*					
 		var baseLayer = {
 		  "MapBox Tiles": layerMapBox,
 		  "OpenStreetMap": layerOSM
 		};
+*/		
 		var overlayLayer = {
 			"<img src='data/stork.png' width='20' height='20'>&nbsp;Лелеки": storkmap.markerClusterGroup,
 			"<img src='data/panoramio-marker.png' width='17' height='17'>&nbsp;Фото Panoramio": panoramio,
@@ -148,7 +148,7 @@
 			
 		};
 		
-		var layerControl = L.control.layers( baseLayer, overlayLayer, {
+		var layerControl = L.control.layers( null, overlayLayer, {
 		  collapsed: false
 		}).addTo(map);
 
@@ -168,22 +168,24 @@
             provider: new L.GeoSearch.Provider.OpenStreetMap()
         }).addTo(map);
 		
+		map.setView([48.611, 31.685], 16);
+		
     };
 
 		var attr_osm = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 		var attr_mapbox = 'Map style &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 		var attr_nests = 'stork nests via <a href="http://www.overpass-api.de/">Overpass API</a>';
 		var attr_dev = 'web map created by <a href="http://www.openstreetmap.org/user/HasT">HasT</a>';	
-	
+
+/*		
 		var layerMapBox = L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-			//attribution: 'Map style &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 			attribution: [attr_mapbox, attr_nests, attr_dev].join(', '),
 			id: 'examples.map-20v6611k'
 		});	
+*/
 		
 		var layerOSM = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: [attr_osm, attr_nests, attr_dev].join(', ')
-			//attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 		});
 
 		var panoramio = new L.Panoramio({maxLoad: 50, maxTotal: 250});
@@ -192,13 +194,13 @@
 		var flickr = new L.Flickr(api_key,{maxLoad: 50, maxTotal: 250}); 		
 		
 
-		storkmap.currentPosition = [48.611, 31.685]; 
 		storkmap.map = L.map('map', {layers: [layerOSM], minZoom: 6});
 		storkmap.currentTag = "birds_nest";
 		storkmap.markerClusterGroup = L.markerClusterGroup();
 		storkmap.osmJson = {};
 		makeMap();	
 
+		
   </script>
 </body>
 </html>
